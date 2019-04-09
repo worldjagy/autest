@@ -28,5 +28,13 @@ tool.loadJar =function(url,v){
 tool.require = function(url,v){
     return require(load(url,v));
 }
+tool.execScriptFile = function(url,v){
+    engines.execScriptFile(load(url,v))
+}
+tool.execScript = function(url){
+    var fileName = url.substring(url.lastIndexOf('/')+1,url.lastIndexOf('.'));
+    r = http.get(url);
+    engines.execScript(fileName, r.body.string())
+}
 
 module.exports = tool;
