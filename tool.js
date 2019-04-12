@@ -2,9 +2,7 @@ var _ = require('lodash')
 var tool = {};
 var sgs = storages.create("app");
 tool.getUrl = function(path){
-    var baseUrl = sgs.get('baseUrl')||'https://raw.githubusercontent.com/worldjagy/autest/master/';
-    var url = baseUrl+path;
-    return url;
+    return sgs.get('baseUrl')+path;
 }
 tool.load = function (path, v) {
     var fileName = path.substring(path.lastIndexOf('/') + 1);
