@@ -100,7 +100,7 @@ var T = function () {
         },
         isTimeUp:function(){
             var mtp= endTime-new Date().getTime()
-            log('Rest of time:%d miniutes', execTime/60000)
+            log('Rest of time:%d miniutes', mtp/60000)
             return mtp<0;
         }
     }
