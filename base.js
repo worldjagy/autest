@@ -83,7 +83,9 @@ var T = function () {
         },
         getAppLog:function(){
             var ts = sgs.get(app_stati_key,[]);
-            return _.find(ts, { appName: _appName });
+            var d = _.find(ts, { appName: _appName });
+            log(d)
+            return d;
         },
         postAppLog:function(){
             lastOpTime = this.getAppState('lastOpTime');
