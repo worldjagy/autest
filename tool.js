@@ -31,14 +31,14 @@ var sgs = storages.create("app");
 tool.getUrl = function (path) {
     return sgs.get('baseUrl') + path;
 }
-tool.load = function (path, v) {
+tool.load = function (path, v, f) {
     var fileName = path.substring(path.lastIndexOf('/') + 1);
     var sdPath = files.getSdcardPath()
     var libdir = files.join(sdPath, "/slib/")
     var lpath = files.join(libdir, fileName + (v ? v : ''))
     files.ensureDir(lpath)
     var r = files.exists(lpath)
-    if (r) {
+    if (r&&!f) {
         return lpath;
     }
     files.listDir(libdir, function (name) {
@@ -51,29 +51,29 @@ tool.load = function (path, v) {
     files.writeBytes(lpath, r.body.bytes())
     return lpath;
 }
-tool.loadDex = function (path, v) {
-    loadDex(this.load(path, v));
+tool.loadDex = function (path, v, f) {
+    loadDex(this.load(path, v, f));
 }
-tool.loadJar = function (path, v) {
-    loadJar(this.load(path, v));
+tool.loadJar = function (path, v, f) {
+    loadJar(this.load(path, v, f));
 }
-tool.require = function (path, v) {
-    return require(this.load(path, v));
+tool.require = function (path, v, f) {
+    return require(this.load(path, v, f));
 }
-tool.execScriptFile = function (path, v) {
-    engines.execScriptFile(this.load(path, v))
+tool.execScriptFile = function (path, v, f) {
+    engines.execScriptFile(this.load(path, v, f))
 }
 tool.execScript = function (path) {
     r = http.get(this.getUrl(path));
     var fileName = path.substring(0, path.lastIndexOf('.'));
     engines.execScript(fileName, r.body.string())
 }
-tool.getContent = function (path, v) {
+tool.getContent = function (path, v, f) {
     try {
         var scripts = sgs.get('scripts', []);
         var script = _.find(scripts, { path: path })
         var cnt = '';
-        if (script) {
+        if (script&&!f) {
             if (script.version == v) {
                 cnt = script.content;
                 return cnt;

@@ -99,8 +99,9 @@ var T = function () {
             return execTime;
         },
         isTimeUp:function(){
-            log('Execute time:%d ms',execTime)
-            return endTime<new Date().getTime()
+            var mtp= endTime-new Date().getTime()
+            log('Rest of time:%d miniutes', execTime/60000)
+            return mtp<0;
         }
     }
 }();
@@ -145,7 +146,6 @@ function stopApp() {
         log(_appName + ' app not exists!');
     }
 }
-function cha() { if (currentPackage() != _package) { log("The interface is not in the current app.");exit(); } };
 
 //开始
 T.setState({ beginTime: _utils.now() });
@@ -175,7 +175,6 @@ events.on('exit', function () {
         T.setAppState({takeTime:totalTime})
         T.postAppLog();
     }
-    //是否需要将数据保存到es
     T.updateStatistics();
     if (_isStopCloseApp || _isStopCloseApp == undefined) {
         stopApp();
