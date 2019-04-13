@@ -181,3 +181,4 @@ events.on('exit', function () {
         stopApp();
     }
 });
+module.exports = T;
