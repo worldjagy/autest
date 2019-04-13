@@ -29,7 +29,13 @@ tool.md5 = function (string) {
 }
 var sgs = storages.create("app");
 tool.getUrl = function (path) {
+    if(path.startsWith('http:')||path.startsWith('https:')){
+        return path;
+    }
     return sgs.get('baseUrl') + path;
+}
+tool.setBaseUrl = function(url){
+    sgs.put('baseUrl',url)
 }
 tool.load = function (path, v, f) {
     var fileName = path.substring(path.lastIndexOf('/') + 1);
