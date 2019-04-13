@@ -149,13 +149,12 @@ function stopApp() {
 
 //开始
 T.setState({ beginTime: _utils.now() });
-_launchApp=launchApp
 T.launchApp = function (app, flag) {
     _appName = app;
     _package = getPackageName(app)
     log(_package)
     isStopCloseApp = flag
-    _exists = _launchApp(_appName);
+    _exists = launchApp(_appName);
     if (!_exists) {
         log('Not install App ' + _appName)
         exit();
