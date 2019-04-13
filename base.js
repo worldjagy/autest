@@ -150,7 +150,7 @@ function stopApp() {
 //开始
 T.setState({ beginTime: _utils.now() });
 _launchApp=launchApp
-launchApp = function (app, flag) {
+T.launchApp = function (app, flag) {
     _appName = app;
     _package = getPackageName(app)
     log(_package)
@@ -161,6 +161,7 @@ launchApp = function (app, flag) {
         exit();
     }
 }
+T.log = log
 // 结束
 events.on('exit', function () {
     T.setState({ exitTime: _utils.now() });
