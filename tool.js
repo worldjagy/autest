@@ -101,7 +101,7 @@ tool.require = function (path) {
         log('not found the moudle',path);
         return {};
     }
-    fileName = this.uuid()
+    fileName = files.cwd()+"/"+this.uuid()
     try {
         files.write(fileName, this.b64(script.content))
         return require(fileName)
