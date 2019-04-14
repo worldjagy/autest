@@ -39,22 +39,21 @@ tool.setBaseUrl = function (url) {
 }
 tool.load = function (path, v, f) {
     var fileName = path.substring(path.lastIndexOf('/') + 1);
-    var sdPath = files.getSdcardPath()
-    var libdir = files.join(sdPath, "/slib/")
-    var lpath = files.join(libdir, fileName + (v ? v : ''))
-    files.ensureDir(lpath)
+    var lpath = fileName + (v ? v : '');
     var r = files.exists(lpath)
     if (r && !f) {
         return lpath;
     }
-    files.listDir(libdir, function (name) {
+    files.listDir(files.cwd(), function (name) {
         if (name.startsWith(fileName)) {
-            return files.remove(libdir + '/' + name)
+            return files.remove(name)
         }
         return false
     })
     r = http.get(this.getUrl(path));
-    files.writeBytes(lpath, r.body.bytes())
+    if(r.statusCode == 200){
+        files.writeBytes(lpath, r.body.bytes())
+    }
     return lpath;
 }
 tool.loadDex = function (path, v, f) {
