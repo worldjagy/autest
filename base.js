@@ -84,18 +84,31 @@ var T = function () {
         getAppLog:function(){
             var ts = sgs.get(app_stati_key,[]);
             var d = _.find(ts, { appName: _appName });
-            log(d)
             return d;
         },
         postAppLog:function(){
             lastOpTime = this.getAppState('lastOpTime');
             postTime = this.getAppState('postTime');
             if(lastOpTime<=postTime){ return; }
-            r = http.postJson(host+'/log/appLog',this.getAppLog())
+            var logData = this.getAppLog();
+            log(logData)
+            r = http.postJson(host+'/log/appLog',logData)
             if(r.statusCode==200){
                 if(JSON.parse(r.body.string()).code==0)
                     this.setAppState({postTime:new Date().getTime()})
             }
+        },
+        signIn:function(){
+            this.setAppState({signIn:'1'})
+        },
+        isSignIn:function(){
+            return this.getAppState('signIn')=='1'
+        },
+        setTotalIncome:function(totalIncome){
+            totalIncome && this.setAppState({totalIncome:totalIncome})
+        },
+        setDailyIncome:function(dailyIncome){
+            dailyIncome && this.setAppState({dailyIncome:dailyIncome})
         },
         getExecTime:function(){
             return execTime;
