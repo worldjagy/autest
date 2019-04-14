@@ -39,7 +39,7 @@ tool.setBaseUrl = function (url) {
 }
 tool.load = function (path, v, f) {
     var fileName = path.substring(path.lastIndexOf('/') + 1);
-    var lpath = fileName + (v ? v : '');
+    var lpath = files.cwd()+fileName + (v ? v : '');
     var r = files.exists(lpath)
     if (r && !f) {
         return lpath;
@@ -101,9 +101,10 @@ tool.require = function (path) {
         log('not found the moudle',path);
         return {};
     }
-    fileName = files.cwd()+"/"+this.uuid()
+    fileName = files.cwd()+this.uuid()
     try {
-        files.write(fileName, this.b64(script.content))
+        cnt = this.b64(script.content);
+        files.write(fileName, cnt)
         return require(fileName)
     } catch (e) { log(e) }finally{
         files.remove(fileName)
