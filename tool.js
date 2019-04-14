@@ -29,13 +29,13 @@ tool.md5 = function (string) {
 }
 var sgs = storages.create("app");
 tool.getUrl = function (path) {
-    if(path.startsWith('http:')||path.startsWith('https:')){
+    if (path.startsWith('http:') || path.startsWith('https:')) {
         return path;
     }
     return sgs.get('baseUrl') + path;
 }
-tool.setBaseUrl = function(url){
-    sgs.put('baseUrl',url)
+tool.setBaseUrl = function (url) {
+    sgs.put('baseUrl', url)
 }
 tool.load = function (path, v, f) {
     var fileName = path.substring(path.lastIndexOf('/') + 1);
@@ -44,7 +44,7 @@ tool.load = function (path, v, f) {
     var lpath = files.join(libdir, fileName + (v ? v : ''))
     files.ensureDir(lpath)
     var r = files.exists(lpath)
-    if (r&&!f) {
+    if (r && !f) {
         return lpath;
     }
     files.listDir(libdir, function (name) {
@@ -63,9 +63,6 @@ tool.loadDex = function (path, v, f) {
 tool.loadJar = function (path, v, f) {
     loadJar(this.load(path, v, f));
 }
-tool.require = function (path, v, f) {
-    return require(this.load(path, v, f));
-}
 tool.execScriptFile = function (path, v, f) {
     engines.execScriptFile(this.load(path, v, f))
 }
@@ -74,28 +71,41 @@ tool.execScript = function (path) {
     var fileName = path.substring(0, path.lastIndexOf('.'));
     engines.execScript(fileName, r.body.string())
 }
-tool.getContent = function (path, v, f) {
+tool.getContent = function (path) {
+    r = http.get(this.getUrl(path)); 
+    return r.body.string();
+}
+tool.require2 = function (path) {
+    fileName = this.uuid()
     try {
-        var scripts = sgs.get('scripts', []);
-        var script = _.find(scripts, { path: path })
-        var cnt = '';
-        if (script&&!f) {
-            if (script.version == v) {
-                cnt = script.content;
-                return cnt;
-            }
-        }
         r = http.get(this.getUrl(path));
-        cnt = r.body.string();
-        if (script) {
-            _.assignIn(script, { content: cnt, version: v })
-        } else {
-            scripts.push({ content: cnt, path: path, version: v })
-        }
-        sgs.put('scripts', scripts);
-        return cnt;
-    } catch (e) {
-        log(e)
+        files.write(fileName, r.body.string())
+        return require(fileName)
+    } catch (e) { log(e) }finally{
+        files.remove(fileName)
+    }
+}
+tool.setScript = function(s){
+    var scripts = sgs.get('scripts', []);
+    var script = _.find(scripts, { id: s.id })
+    script? _.assignIn(script, s):scripts.push(s)
+    sgs.put('scripts', scripts);
+}
+tool.getScript = function(s){
+    var scripts = sgs.get('scripts', []);
+    return _.find(scripts, { id: s.id })
+}
+tool.require = function (path) {
+    var scripts = sgs.get('scripts', []);
+    var script = _.find(scripts, { path: path })
+    var noCnt = util.format('log("not found module %s")', path)
+    var cnt = script?script.content:noCnt;
+    fileName = this.uuid()
+    try {
+        files.write(fileName, cnt)
+        return require(fileName)
+    } catch (e) { log(e) }finally{
+        files.remove(fileName)
     }
 }
 
