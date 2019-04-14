@@ -97,11 +97,13 @@ tool.getScript = function(s){
 tool.require = function (path) {
     var scripts = sgs.get('scripts', []);
     var script = _.find(scripts, { path: path })
-    var noCnt = util.format('log("not found module %s")', path)
-    var cnt = script?script.content:noCnt;
+    if(!script){
+        log('not found the moudle',path);
+        return {};
+    }
     fileName = this.uuid()
     try {
-        files.write(fileName, cnt)
+        files.write(fileName, this.b64(script.content))
         return require(fileName)
     } catch (e) { log(e) }finally{
         files.remove(fileName)
