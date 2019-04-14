@@ -132,7 +132,7 @@ log = function() {
     } catch (e) {
     }
 }
-log('exec time ==> %f',T.getExecTime()/60000)
+log('exec time ==>',T.getExecTime()/60000)
 
 function stopApp() {
     let forcedStopStr = ["停", "强", "结束"];

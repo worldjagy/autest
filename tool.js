@@ -75,7 +75,7 @@ tool.getContent = function (path) {
     return r.body.string();
 }
 tool.require2 = function (path) {
-    fileName = this.uuid()
+    fileName = files.cwd()+'/'+this.uuid()
     try {
         r = http.get(this.getUrl(path));
         files.write(fileName, r.body.string())
